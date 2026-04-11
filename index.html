@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday Neha ❤️</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: linear-gradient(to right, #ff758c, #ff7eb3);
+      color: white;
+      overflow: hidden;
+    }
+
+    .container {
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: 36px;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px white; }
+      to { text-shadow: 0 0 20px pink; }
+    }
+
+    p {
+      font-size: 20px;
+    }
+
+    button {
+      padding: 12px 25px;
+      border: none;
+      background: white;
+      color: #ff4d6d;
+      font-size: 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    img {
+      width: 220px;
+      border-radius: 20px;
+      margin-top: 20px;
+    }
+
+    .heart {
+      position: absolute;
+      color: red;
+      animation: float 5s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh); }
+      100% { transform: translateY(-10vh); }
+    }
+
+    .slideshow img {
+      display: none;
+      width: 220px;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Happy Birthday Neha Jaanu ❤️</h1>
+
+  <p>
+    My dear Neha 💖<br><br>
+    You are my happiness, my love, my everything 🌍  
+    I’m so lucky to have you in my life ❤️  
+  </p>
+
+  <button onclick="showMessage()">Click for Surprise 🎁</button>
+
+  <p id="hiddenMessage" style="display:none;">
+    I love you forever Neha ❤️ Happy Birthday Jaanu 🎂💖  
+  </p>
+
+  <!-- Slideshow -->
+  <div class="slideshow">
+    <img src="https://i.imgur.com/3ZQ3Z4B.png">
+    <img src="https://i.imgur.com/1.jpg">
+    <img src="https://i.imgur.com/2.jpg">
+  </div>
+
+</div>
+
+<!-- Music -->
+<audio autoplay loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
+</audio>
+
+<script>
+  function showMessage() {
+    document.getElementById("hiddenMessage").style.display = "block";
+  }
+
+  // Floating hearts
+  setInterval(() => {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = Math.random() * 20 + 20 + "px";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+      heart.remove();
+    }, 5000);
+  }, 400);
+
+  // Slideshow
+  let slideIndex = 0;
+  let slides = document.querySelectorAll(".slideshow img");
+
+  function showSlides() {
+    slides.forEach(slide => slide.style.display = "none");
+    slideIndex++;
+    if (slideIndex > slides.length) slideIndex = 1;
+    slides[slideIndex - 1].style.display = "block";
+    setTimeout(showSlides, 2000);
+  }
+
+  showSlides();
+
+  // Tap screen hearts explosion
+  document.addEventListener("click", function(e) {
+    for(let i=0; i<10; i++) {
+      let heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "❤️";
+      heart.style.left = e.clientX + "px";
+      heart.style.top = e.clientY + "px";
+      heart.style.fontSize = "25px";
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 3000);
+    }
+  });
+</script>
+
+</body>
+</html>
