@@ -17,13 +17,11 @@ body {
   text-align: center;
 }
 
-/* 💌 Container */
 .box {
   margin-top: 80px;
   padding: 20px;
 }
 
-/* 💖 Heading */
 h1 {
   font-size: 38px;
   margin-bottom: 20px;
@@ -32,7 +30,6 @@ h1 {
                0 0 40px #ff1a75;
 }
 
-/* 💬 Letter text */
 #text {
   font-size: 18px;
   line-height: 1.7;
@@ -40,7 +37,6 @@ h1 {
   padding: 0 20px;
 }
 
-/* ❤️ Floating hearts */
 .heart {
   position: fixed;
   bottom: 0;
@@ -49,43 +45,35 @@ h1 {
 }
 
 @keyframes float {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100vh);
-    opacity: 0;
-  }
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100vh); opacity: 0; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- 💌 LETTER -->
 <div class="box">
   <h1>💌 For You</h1>
   <div id="text"></div>
 </div>
 
-<!-- 🎵 MUSIC -->
 <audio id="music" loop>
-  <source src="Tera Asar(MP3_160K).mp3" type="audio/mpeg">
+  <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-  
+// 🎵 MUSIC (one tap)
 const music = document.getElementById("music");
 
 function playMusic() {
+  music.volume = 0.5;
   music.play().then(() => {
     document.body.removeEventListener("click", playMusic);
   }).catch(() => {});
 }
 
 document.body.addEventListener("click", playMusic);
-</script>
 
 // ❤️ Floating hearts
 setInterval(() => {
@@ -97,7 +85,7 @@ setInterval(() => {
   setTimeout(() => h.remove(), 6000);
 }, 400);
 
-// 💌 Typewriter text
+// 💌 Typewriter
 const msg =
 "Hey ❤️\n\n" +
 "Aaj tumhara special day hai 🎂✨\n\n" +
@@ -118,9 +106,7 @@ function type() {
   }
 }
 
-// start typing automatically
 type();
-
 </script>
 
 </body>
