@@ -3,257 +3,230 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday ❤️</title>
+<title>For You ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 
 <style>
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
   color: white;
-  text-align: center;
-  overflow-x: hidden;
 }
 
-.container {
-  padding: 20px;
-}
-
-h1 {
-  font-size: 32px;
-}
-
-.cake {
-  font-size: 60px;
-  animation: pop 1s infinite alternate;
-}
-
-@keyframes pop {
-  from { transform: scale(1); }
-  to { transform: scale(1.1); }
-}
-
-.gift {
-  font-size: 70px;
-  cursor: pointer;
-}
-
-#typing {
-  font-size: 18px;
-  margin-top: 15px;
-  min-height: 40px;
-}
-
-.slideshow img {
-  width: 80%;
-  max-width: 280px;
-  border-radius: 15px;
-  display: none;
-  margin-top: 15px;
-}
-
-button {
-  margin-top: 20px;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 20px;
-  background: white;
-  color: #ff4d6d;
-  font-size: 16px;
-}
-
-.love-letter {
-  margin-top: 20px;
-  padding: 15px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 15px;
-  display: none;
-  white-space: pre-wrap;
-  text-align: left;
-}
-
-/* hearts */
-.heart {
-  position: fixed;
-  font-size: 18px;
-  animation: floatUp 1.5s linear forwards;
-}
-
-@keyframes floatUp {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-120px); opacity: 0; }
-}
-
-/* fireworks */
-canvas {
+/* VIDEO */
+video {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  filter: brightness(0.5);
+}
+
+/* INTRO */
+#intro {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 10;
+}
+
+#enterBtn {
+  padding: 12px 25px;
+  border-radius: 30px;
+  border: none;
+  background: #ff4d6d;
+  color: white;
+}
+
+/* MAIN */
+#main {
+  display: none;
+  text-align: center;
+  padding-top: 60px;
+}
+
+/* NAME */
+.names {
+  font-size: 28px;
+  font-weight: 600;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 10px #ff4d6d; }
+  to { text-shadow: 0 0 25px #ff99ac; }
+}
+
+/* GIFT */
+.gift-box {
+  width: 120px;
+  height: 120px;
+  background: #ff4d6d;
+  margin: 40px auto;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  transition: 0.3s;
+}
+
+.gift-box::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 20px;
+  background: white;
+  top: 40px;
+}
+
+.gift-box::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 100%;
+  background: white;
+  left: 50px;
+}
+
+/* POPUP */
+#popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: rgba(0,0,0,0.9);
+  padding: 20px;
+  border-radius: 20px;
+  width: 85%;
+  max-width: 320px;
+  transition: 0.4s;
+  z-index: 20;
+}
+
+#popup.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+#letter {
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* HEARTS */
+.heart {
+  position: fixed;
+  font-size: 20px;
+  animation: rise 5s linear infinite;
+}
+
+@keyframes rise {
+  to {
+    transform: translateY(-110vh);
+    opacity: 0;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- VIDEO -->
+<video autoplay muted loop>
+  <source src="https://cdn.coverr.co/videos/coverr-love-couple-sunset-5171/1080p.mp4">
+</video>
+
+<!-- INTRO -->
+<div id="intro">
+  <h1>For Someone Special ❤️</h1>
+  <button id="enterBtn" onclick="enter()">Tap to Enter</button>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="names">Neha ❤️ You</div>
+  <h2>Happy Birthday ❤️</h2>
+
+  <div class="gift-box" onclick="openGift()"></div>
+</div>
+
+<!-- POPUP -->
+<div id="popup">
+  <p id="letter"></p>
+</div>
+
 <audio id="music" loop>
   <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a1b2b3.mp3">
 </audio>
 
-<canvas id="fireworks"></canvas>
-
-<div class="container">
-
-<h1>🎉 Happy Birthday Neha ❤️</h1>
-
-<div class="cake">🎂</div>
-<div class="gift" onclick="openGift()">🎁</div>
-
-<div id="typing"></div>
-
-<div class="slideshow">
-  <!-- fallback images -->
-  <img src="https://via.placeholder.com/300">
-  <img src="https://via.placeholder.com/300">
-  <img src="https://via.placeholder.com/300">
-</div>
-
-<button onclick="start()">Open My Heart 💌 + 🎵</button>
-
-<div class="love-letter" id="letter"></div>
-
-</div>
-
 <script>
 
-window.onload = function () {
-
-// typing
-let text = "You are my happiness ❤️";
-let i = 0;
-
-function type() {
-  if (i < text.length) {
-    document.getElementById("typing").innerHTML += text[i];
-    i++;
-    setTimeout(type, 70);
-  }
+// ENTER SCREEN
+function enter() {
+  document.getElementById("intro").style.display = "none";
+  document.getElementById("main").style.display = "block";
 }
-type();
 
-// slideshow
-let slides = document.querySelectorAll(".slideshow img");
-let index = 0;
-
-function show() {
-  slides.forEach(s => s.style.display = "none");
-  index++;
-  if (index > slides.length) index = 1;
-  slides[index - 1].style.display = "block";
-  setTimeout(show, 2000);
-}
-show();
-
-};
-
-// hearts
-document.addEventListener("click", e => {
+// HEARTS
+setInterval(() => {
   let h = document.createElement("div");
   h.className = "heart";
   h.innerHTML = "💖";
-  h.style.left = e.clientX + "px";
-  h.style.top = e.clientY + "px";
+  h.style.left = Math.random() * 100 + "vw";
   document.body.appendChild(h);
-  setTimeout(() => h.remove(), 1500);
-});
+  setTimeout(() => h.remove(), 5000);
+}, 400);
 
-// gift
-function openGift() {
-  alert("🎉 Surprise! Happy Birthday ❤️");
-}
-
-// typewriter
-function typeWriter(text, el, speed = 35) {
+// TYPEWRITER
+function typeWriter(text, el) {
+  el.innerHTML = "";
   let i = 0;
-  function typing() {
+
+  function type() {
     if (i < text.length) {
       el.innerHTML += text[i];
       i++;
-      setTimeout(typing, speed);
+      setTimeout(type, 30);
     }
   }
-  typing();
+
+  type();
 }
 
-// FIXED START FUNCTION
-function start() {
-  let letterBox = document.getElementById("letter");
-  letterBox.style.display = "block";
-  letterBox.innerHTML = "";
+// GIFT OPEN
+function openGift() {
 
-  // play music (mobile safe)
+  document.querySelector(".gift-box").style.transform = "scale(0)";
+
+  let popup = document.getElementById("popup");
+  popup.classList.add("show");
+
   let music = document.getElementById("music");
-  music.play().catch(() => {});
+  music.play();
 
-  let letter = `
+  let text = `
 My dear ❤️
 
-You are my happiness, my peace, my world 🌍
-
-I will always choose you 🫶
+You are my happiness 🌍
+You are my peace 🫶
+You are my everything 💖
 
 Happy Birthday 🎂❤️
 
 — Yours always
 `;
 
-  typeWriter(letter, letterBox);
-
-  // 🔥 SCROLL FIX
-  setTimeout(() => {
-    letterBox.scrollIntoView({ behavior: "smooth" });
-  }, 300);
+  typeWriter(text, document.getElementById("letter"));
 }
-
-// fireworks
-const canvas = document.getElementById("fireworks");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
-
-function boom(x, y) {
-  for (let i = 0; i < 20; i++) {
-    particles.push({
-      x, y,
-      dx: (Math.random() - 0.5) * 6,
-      dy: (Math.random() - 0.5) * 6,
-      alpha: 1
-    });
-  }
-}
-
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  particles.forEach((p, i) => {
-    p.x += p.dx;
-    p.y += p.dy;
-    p.alpha -= 0.02;
-
-    ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
-    ctx.fillRect(p.x, p.y, 3, 3);
-
-    if (p.alpha <= 0) particles.splice(i, 1);
-  });
-
-  requestAnimationFrame(animate);
-}
-animate();
-
-document.addEventListener("click", e => boom(e.clientX, e.clientY));
 
 </script>
 
