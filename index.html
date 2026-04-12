@@ -1,153 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Happy Birthday Neha ❤️</title>
+<meta charset="UTF-8">
+<title>Happy Birthday Neha ❤️</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: linear-gradient(to right, #ff758c, #ff7eb3);
-      color: white;
-      overflow: hidden;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  color: white;
+}
 
-    .container {
-      padding: 30px;
-    }
+.container {
+  padding: 30px;
+}
 
-    h1 {
-      font-size: 36px;
-      animation: glow 2s infinite alternate;
-    }
+h1 {
+  font-size: 35px;
+}
 
-    @keyframes glow {
-      from { text-shadow: 0 0 10px white; }
-      to { text-shadow: 0 0 20px pink; }
-    }
+#typing {
+  font-size: 22px;
+  margin-top: 20px;
+  min-height: 30px;
+}
 
-    p {
-      font-size: 20px;
-    }
+.slideshow img {
+  width: 250px;
+  border-radius: 20px;
+  display: none;
+  margin-top: 20px;
+}
 
-    button {
-      padding: 12px 25px;
-      border: none;
-      background: white;
-      color: #ff4d6d;
-      font-size: 18px;
-      border-radius: 12px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
+button {
+  margin-top: 20px;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 25px;
+  background: white;
+  color: #ff4d6d;
+  font-size: 18px;
+}
 
-    img {
-      width: 220px;
-      border-radius: 20px;
-      margin-top: 20px;
-    }
+.love-letter {
+  margin-top: 30px;
+  background: rgba(255,255,255,0.2);
+  padding: 20px;
+  border-radius: 20px;
+  display: none;
+}
 
-    .heart {
-      position: absolute;
-      color: red;
-      animation: float 5s linear infinite;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(100vh); }
-      100% { transform: translateY(-10vh); }
-    }
-
-    .slideshow img {
-      display: none;
-      width: 220px;
-      border-radius: 20px;
-    }
-  </style>
+</style>
 </head>
 
 <body>
 
 <div class="container">
-  <h1>Happy Birthday Neha Jaanu ❤️</h1>
 
-  <p>
-    My dear Neha 💖<br><br>
-    You are my happiness, my love, my everything 🌍  
-    I’m so lucky to have you in my life ❤️  
-  </p>
+<h1>Happy Birthday Neha Jaanu ❤️</h1>
 
-  <button onclick="showMessage()">Click for Surprise 🎁</button>
+<div id="typing"></div>
 
-  <p id="hiddenMessage" style="display:none;">
-    I love you forever Neha ❤️ Happy Birthday Jaanu 🎂💖  
-  </p>
-
-  <!-- Slideshow -->
-  <div class="slideshow">
+<!-- Slideshow -->
+<div class="slideshow">
   <img src="neha1.jpg">
   <img src="neha2.jpg">
   <img src="neha3.jpg">
-  </div>
+</div>
+
+<button onclick="showLetter()">Open My Heart 💌</button>
+
+<div class="love-letter" id="letter">
+  <p>
+  My dear Neha ❤️<br><br>
+  From the day you came into my life, everything changed 💖  
+  You are my happiness, my peace, my everything 🌍  
+  I promise to always stand by you no matter what 🫶  
+  I love you more than words can explain ❤️  
+  <br><br>
+  Happy Birthday my Jaanu 🎂💖
+  </p>
+</div>
 
 </div>
 
-<!-- Music -->
-<audio autoplay loop>
-  <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
-</audio>
-
 <script>
-  function showMessage() {
-    document.getElementById("hiddenMessage").style.display = "block";
+
+// Typing animation
+let text = "You are my happiness... ❤️";
+let i = 0;
+
+function typeEffect() {
+  if (i < text.length) {
+    document.getElementById("typing").innerHTML += text.charAt(i);
+    i++;
+    setTimeout(typeEffect, 80);
   }
+}
 
-  // Floating hearts
-  setInterval(() => {
-    let heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerHTML = "❤️";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = Math.random() * 20 + 20 + "px";
-    document.body.appendChild(heart);
+typeEffect();
 
-    setTimeout(() => {
-      heart.remove();
-    }, 5000);
-  }, 400);
+// Slideshow
+let slideIndex = 0;
+let slides = document.querySelectorAll(".slideshow img");
 
-  // Slideshow
-  let slideIndex = 0;
-  let slides = document.querySelectorAll(".slideshow img");
+function showSlides() {
+  slides.forEach(img => img.style.display = "none");
+  slideIndex++;
+  if (slideIndex > slides.length) slideIndex = 1;
+  slides[slideIndex - 1].style.display = "block";
+  setTimeout(showSlides, 2000);
+}
 
-  function showSlides() {
-    slides.forEach(slide => slide.style.display = "none");
-    slideIndex++;
-    if (slideIndex > slides.length) slideIndex = 1;
-    slides[slideIndex - 1].style.display = "block";
-    setTimeout(showSlides, 2000);
-  }
+showSlides();
 
-  showSlides();
+// Show love letter
+function showLetter() {
+  document.getElementById("letter").style.display = "block";
+}
 
-  // Tap screen hearts explosion
-  document.addEventListener("click", function(e) {
-    for(let i=0; i<10; i++) {
-      let heart = document.createElement("div");
-      heart.className = "heart";
-      heart.innerHTML = "❤️";
-      heart.style.left = e.clientX + "px";
-      heart.style.top = e.clientY + "px";
-      heart.style.fontSize = "25px";
-      document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 3000);
-    }
-  });
 </script>
 
 </body>
