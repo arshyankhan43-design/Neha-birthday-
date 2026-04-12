@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Birthday Neha ❤️</title>
 
 <style>
@@ -11,113 +12,141 @@ body {
   text-align: center;
   background: linear-gradient(135deg, #ff758c, #ff7eb3);
   color: white;
+  overflow-x: hidden;
 }
 
 .container {
-  padding: 30px;
+  padding: 20px;
 }
 
 h1 {
-  font-size: 35px;
+  font-size: 32px;
 }
 
+/* make text BIGGER for phone */
 #typing {
-  font-size: 22px;
-  margin-top: 20px;
-  min-height: 30px;
+  font-size: 20px;
+  margin-top: 15px;
+  min-height: 40px;
+  padding: 0 10px;
 }
 
+/* slideshow responsive */
 .slideshow img {
-  width: 250px;
+  width: 80%;
+  max-width: 300px;
   border-radius: 20px;
   display: none;
   margin-top: 20px;
 }
 
+/* button */
 button {
   margin-top: 20px;
-  padding: 12px 25px;
+  padding: 14px 25px;
   border: none;
   border-radius: 25px;
   background: white;
   color: #ff4d6d;
-  font-size: 18px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
+/* cake */
+.cake {
+  font-size: 60px;
+  margin-top: 10px;
+}
+
+/* gift */
+.gift-box {
+  font-size: 70px;
+  margin-top: 10px;
+}
+
+/* love letter MOBILE FIX */
 .love-letter {
-  margin-top: 30px;
-  background: rgba(255,255,255,0.2);
+  margin-top: 25px;
+  background: rgba(255,255,255,0.25);
   padding: 20px;
   border-radius: 20px;
+  line-height: 1.7;
+  font-size: 16px;
+  text-align: left;
   display: none;
+  white-space: pre-wrap;
 }
 
+/* hearts */
+.heart {
+  position: fixed;
+  font-size: 18px;
+  animation: floatUp 1.5s linear forwards;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-120px); opacity: 0; }
+}
+
+/* fireworks canvas */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
 </style>
 </head>
 
 <body>
 
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a1b2b3.mp3">
+</audio>
+
+<canvas id="fireworks"></canvas>
+
 <div class="container">
 
-<h1>Happy Birthday Neha Jaanu ❤️</h1>
+<h1>Happy Birthday Neha ❤️</h1>
+
+<div class="cake">🎂</div>
+<div class="gift-box" onclick="openGift()">🎁</div>
 
 <div id="typing"></div>
 
-<!-- Slideshow -->
 <div class="slideshow">
   <img src="neha1.jpg">
   <img src="neha2.jpg">
   <img src="neha3.jpg">
 </div>
 
-<button onclick="showLetter()">Open My Heart 💌</button>
+<button onclick="startAll()">Open My Heart 💌 + 🎵</button>
 
-<div class="love-letter" id="letter">
-  <p>
-  <div class="love-letter" id="letter">
-  <p>
-  Meri pyaari Neha ❤️<br><br>
-
-  Jab se tum meri life mein aayi ho, sab kuch change ho gaya hai… sab kuch better ho gaya 💖<br><br>
-
-  Tum meri smile ho, meri peace ho, aur meri sabse badi happiness 😊<br><br>
-
-  Shayad main perfect nahi hoon, par main tumse dil se pyaar karta hoon ❤️<br><br>
-
-  Aaj tumhare birthday par bas itna kehna hai… tum meri life ki sabse important person ho 💕<br><br>
-
-  Aur chahe life mein kuch bhi ho jaye… main hamesha tumhe hi choose karunga ❤️<br><br>
-
-  Kyunki tum sirf meri love nahi ho…  
-  <b>tum meri home ho ❤️</b><br><br>
-
-  Happy Birthday meri Jaanu 🎂💖<br><br>
-
-  — Tumhara Arshyan ❤️
-  </p>
-  </div>
-  </p>
-</div>
+<div class="love-letter" id="letter"></div>
 
 </div>
 
 <script>
 
-// Typing animation
+window.onload = function () {
+
+/* typing */
 let text = "You are my happiness... ❤️";
 let i = 0;
 
-function typeEffect() {
+function typeIntro() {
   if (i < text.length) {
     document.getElementById("typing").innerHTML += text.charAt(i);
     i++;
-    setTimeout(typeEffect, 80);
+    setTimeout(typeIntro, 70);
   }
 }
+typeIntro();
 
-typeEffect();
-
-// Slideshow
+/* slideshow */
 let slideIndex = 0;
 let slides = document.querySelectorAll(".slideshow img");
 
@@ -128,13 +157,108 @@ function showSlides() {
   slides[slideIndex - 1].style.display = "block";
   setTimeout(showSlides, 2000);
 }
-
 showSlides();
 
-// Show love letter
-function showLetter() {
-  document.getElementById("letter").style.display = "block";
+};
+
+/* typewriter */
+function typeWriter(text, id, speed = 35) {
+  let i = 0;
+  let el = document.getElementById(id);
+
+  function typing() {
+    if (i < text.length) {
+      el.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(typing, speed);
+    }
+  }
+  typing();
 }
+
+/* hearts */
+document.addEventListener("click", function(e) {
+  let heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "💖";
+  heart.style.left = e.clientX + "px";
+  heart.style.top = e.clientY + "px";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 1500);
+});
+
+/* gift */
+function openGift() {
+  alert("🎉 Surprise for Neha ❤️");
+}
+
+/* start */
+function startAll() {
+  document.getElementById("letter").style.display = "block";
+  document.getElementById("letter").innerHTML = "";
+  document.getElementById("bgMusic").play();
+
+  let letter = `
+My dear Neha ❤️
+
+From the moment you came into my life,
+everything became beautiful 💖
+
+You are my happiness, my peace, my world 🌍
+
+I will always choose you 🫶
+
+YOU ARE MY HOME ❤️
+
+Happy Birthday 🎂💖
+
+— Yours ❤️
+`;
+
+  typeWriter(letter, "letter", 35);
+}
+
+/* fireworks */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function createFirework(x, y) {
+  for (let i = 0; i < 25; i++) {
+    particles.push({
+      x, y,
+      speedX: (Math.random() - 0.5) * 5,
+      speedY: (Math.random() - 0.5) * 5,
+      alpha: 1
+    });
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  particles.forEach((p, i) => {
+    p.x += p.speedX;
+    p.y += p.speedY;
+    p.alpha -= 0.02;
+
+    ctx.fillStyle = `rgba(255,255,255,${p.alpha})`;
+    ctx.fillRect(p.x, p.y, 3, 3);
+
+    if (p.alpha <= 0) particles.splice(i, 1);
+  });
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+document.addEventListener("click", function(e) {
+  createFirework(e.clientX, e.clientY);
+});
 
 </script>
 
