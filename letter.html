@@ -75,11 +75,17 @@ h1 {
 </audio>
 
 <script>
+  
+const music = document.getElementById("music");
 
-// 🎶 Play music on tap
-document.body.addEventListener("click", function () {
-  document.getElementById("music").play();
-});
+function playMusic() {
+  music.play().then(() => {
+    document.body.removeEventListener("click", playMusic);
+  }).catch(() => {});
+}
+
+document.body.addEventListener("click", playMusic);
+</script>
 
 // ❤️ Floating hearts
 setInterval(() => {
