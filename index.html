@@ -46,11 +46,13 @@ button {
 }
 
 /* HEARTS */
-.heart {
+  .heart {
   position: fixed;
-  color: pink;
+  bottom: -20px;
+  color: #ff4d6d;
+  font-size: 20px;
   animation: rise 5s linear infinite;
-}
+  }
 
 @keyframes rise {
   to {
@@ -85,7 +87,7 @@ function goNext() {
 setInterval(() => {
   let h = document.createElement("div");
   h.className = "heart";
-  h.innerHTML = "💖";
+  h.innerHTML = "❤️";
   h.style.left = Math.random() * 100 + "vw";
   document.body.appendChild(h);
 
