@@ -17,11 +17,13 @@ body {
   text-align: center;
 }
 
+/* 💌 Container */
 .box {
   margin-top: 80px;
   padding: 20px;
 }
 
+/* 💖 Heading */
 h1 {
   font-size: 38px;
   margin-bottom: 20px;
@@ -30,6 +32,7 @@ h1 {
                0 0 40px #ff1a75;
 }
 
+/* 💬 Letter text */
 #text {
   font-size: 18px;
   line-height: 1.7;
@@ -37,11 +40,13 @@ h1 {
   padding: 0 20px;
 }
 
+/* ❤️ Floating hearts */
 .heart {
   position: fixed;
   bottom: 0;
   font-size: 20px;
   animation: float 6s linear infinite;
+  pointer-events: none;
 }
 
 @keyframes float {
@@ -63,7 +68,7 @@ h1 {
 </audio>
 
 <script>
-// 🎵 MUSIC (one tap)
+// 🎵 MUSIC (perfect one tap)
 const music = document.getElementById("music");
 
 function playMusic() {
@@ -85,7 +90,7 @@ setInterval(() => {
   setTimeout(() => h.remove(), 6000);
 }, 400);
 
-// 💌 Typewriter
+// 💌 Typewriter with smooth start
 const msg =
 "Hey ❤️\n\n" +
 "Aaj tumhara special day hai 🎂✨\n\n" +
@@ -97,16 +102,19 @@ const msg =
 "— Aru 😄❤️";
 
 let i = 0;
+const textEl = document.getElementById("text");
 
 function type() {
   if (i < msg.length) {
-    document.getElementById("text").textContent += msg.charAt(i);
+    textEl.textContent += msg.charAt(i);
     i++;
-    setTimeout(type, 120);
+    setTimeout(type, 100); // smoother speed 💖
   }
 }
 
-type();
+// small delay before typing starts (looks premium 😏)
+setTimeout(type, 500);
+
 </script>
 
 </body>
