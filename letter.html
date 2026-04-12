@@ -3,50 +3,116 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Letter ❤️</title>
+<title>For You ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 
 <style>
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
-  background: black;
+  overflow: hidden;
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+}
+
+/* 🎥 Background video */
+video {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+/* 🌑 Dark overlay */
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: -1;
+}
+
+/* 💌 Content box */
+.box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 400px;
   text-align: center;
 }
 
-.box {
-  max-width: 400px;
+/* ✨ Text style */
+#text {
+  font-size: 20px;
+  line-height: 1.8;
+  white-space: pre-line;
 }
 
-#text {
-  font-size: 18px;
-  white-space: pre-line;
+/* 💖 hearts */
+.heart {
+  position: fixed;
+  bottom: -20px;
+  color: #ff4d6d;
+  animation: rise 6s linear infinite;
+}
+
+@keyframes rise {
+  to {
+    transform: translateY(-110vh);
+    opacity: 0;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- 🎥 VIDEO BACKGROUND -->
+<video autoplay muted loop>
+  <source src="https://cdn.coverr.co/videos/coverr-love-couple-sunset-5171/1080p.mp4">
+</video>
+
+<div class="overlay"></div>
+
+<!-- 💌 LETTER -->
 <div class="box">
   <h1>💌 For You</h1>
   <div id="text"></div>
 </div>
 
+<!-- 🎵 MUSIC -->
+<audio id="music" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
 <script>
+
+// 🎶 Play music on tap
+document.body.addEventListener("click", function () {
+  document.getElementById("music").play();
+});
+
+// 💖 Floating hearts
+setInterval(() => {
+  let h = document.createElement("div");
+  h.className = "heart";
+  h.innerHTML = "❤️";
+  h.style.left = Math.random() * 100 + "vw";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 6000);
+}, 400);
+
+// 💌 Typewriter text
 const msg =
 "Hey ❤️\n\n" +
-"Aaj tumhara special day hai 🎂✨\n" +
-"Bas ek chhoti si baat kehni thi…\n\n" +
-"Tum mere liye really special ho 💖\n\n" +
-"Tumhari smile bohot cute hai 🌸\n" +
-"Aur tumse baat karke din better ho jata hai 😊\n\n" +
-"Main zyada bolta nahi hoon, but you matter a lot ❤️\n\n" +
-"Happy Birthday 🎉\n" +
-"Hamesha khush raho aur apna best version bano 💫\n\n" +
+"Aaj tumhara special day hai 🎂✨\n\n" +
+"Tum mere liye bohot special ho 💖\n\n" +
+"Tumhari smile meri weakness hai 😊\n\n" +
+"Main zyada bolta nahi...\n" +
+"Par tum meri duniya ho ❤️\n\n" +
+"Happy Birthday 🎉\n\n" +
 "— Aru 😄❤️";
 
 let i = 0;
@@ -55,11 +121,12 @@ function type() {
   if (i < msg.length) {
     document.getElementById("text").innerHTML += msg.charAt(i);
     i++;
-    setTimeout(type, 50);
+    setTimeout(type, 40);
   }
 }
 
 type();
+
 </script>
 
 </body>
