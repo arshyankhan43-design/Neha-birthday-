@@ -18,19 +18,57 @@ body {
   overflow: hidden;
 }
 
-/* 🌑 DARK ROOM OVERLAY */
-#roomGlow {
+/* 🌌 background glow */
+#bgGlow {
   position: fixed;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at center, rgba(255,140,0,0.25), black 70%);
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,77,109,0.15), transparent);
+  animation: moveGlow 8s infinite alternate;
+}
+
+@keyframes moveGlow {
+  from { transform: scale(1); }
+  to { transform: scale(1.2); }
+}
+
+/* 💖 name */
+#nameGlow {
+  position: absolute;
+  top: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 34px;
+  font-weight: bold;
+  z-index: 2;
+  color: #ff4d6d;
+
+  text-shadow:
+    0 0 10px #ff4d6d,
+    0 0 20px #ff4d6d,
+    0 0 40px #ff4d6d,
+    0 0 80px rgba(255,77,109,0.8);
+}
+
+/* ✨ sparkle */
+.sparkle {
+  position: fixed;
+  color: #ff4d6d;
+  font-size: 14px;
+  animation: sparkleAnim 1s linear forwards;
   pointer-events: none;
-  transition: 0.5s;
+}
+
+@keyframes sparkleAnim {
+  to {
+    transform: translateY(-30px) scale(0);
+    opacity: 0;
+  }
 }
 
 /* 🎂 cake */
 #cake {
-  font-size: 160px;
+  font-size: 170px;
   position: relative;
   z-index: 2;
 }
@@ -44,52 +82,46 @@ body {
 
 /* 🔥 flame */
 .flame {
-  position: relative;
-  display: inline-block;
   color: orange;
   animation: flicker 0.15s infinite alternate;
 }
 
-/* ✨ glow light */
 .flame::after {
   content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
   width: 30px;
   height: 30px;
   background: radial-gradient(circle, rgba(255,160,0,0.9), transparent);
-  transform: translate(-50%, -50%);
   border-radius: 50%;
   filter: blur(10px);
-  animation: glow 0.2s infinite alternate;
 }
 
 @keyframes flicker {
-  from { transform: scale(1) rotate(-2deg); opacity: 1; }
-  to { transform: scale(1.2) rotate(2deg); opacity: 0.8; }
+  from { transform: scale(1); }
+  to { transform: scale(1.2); }
 }
 
-@keyframes glow {
-  from { opacity: 0.6; }
-  to { opacity: 1; }
-}
-
-/* message */
 #msg {
   margin-top: 20px;
-  font-size: 18px;
-  z-index: 2;
+}
+
+#startBtn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  background: #ff4d6d;
+  color: white;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🌑 room glow -->
-<div id="roomGlow"></div>
+<div id="bgGlow"></div>
 
-<!-- 🎂 cake -->
+<div id="nameGlow"></div>
+
 <div id="cake">
   🎂
   <div class="candle" style="left:-30px;"><span class="flame">🔥</span></div>
@@ -97,67 +129,95 @@ body {
   <div class="candle" style="left:30px;"><span class="flame">🔥</span></div>
 </div>
 
-<div id="msg">Blow the candles 🕯️💨</div>
+<div id="msg">Tap start to blow candles 🎤</div>
+<button id="startBtn" onclick="startMic()">Start 🎤</button>
 
 <script>
 
-let blown = false;
+/* 💖 NAME TYPING */
+let text = "Neha ❤️";
+let index = 0;
 
-// 🎤 mic
-navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+function typeName() {
+  if (index < text.length) {
+    let el = document.getElementById("nameGlow");
+    el.innerHTML += text[index];
 
-  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-  const mic = audioContext.createMediaStreamSource(stream);
-  const analyser = audioContext.createAnalyser();
+    // ✨ sparkle effect on each letter
+    let rect = el.getBoundingClientRect();
+    for (let i = 0; i < 3; i++) {
+      let s = document.createElement("div");
+      s.className = "sparkle";
+      s.innerHTML = "✨";
 
-  mic.connect(analyser);
-  const data = new Uint8Array(analyser.frequencyBinCount);
+      s.style.left = rect.left + Math.random()*rect.width + "px";
+      s.style.top = rect.top + "px";
 
-  function checkBlow() {
-    analyser.getByteFrequencyData(data);
-
-    let volume = data.reduce((a, b) => a + b) / data.length;
-
-    if (volume > 60 && !blown) {
-      blown = true;
-
-      // 💨 blow candles
-      document.querySelectorAll(".flame").forEach(f => {
-        f.innerHTML = "💨";
-        f.style.animation = "none";
-      });
-
-      // 🌑 room becomes darker
-      document.getElementById("roomGlow").style.background =
-        "radial-gradient(circle at center, rgba(0,0,0,0.1), black 80%)";
-
-      document.getElementById("msg").innerHTML = "Make a wish ❤️";
-
-      setTimeout(() => {
-        window.location.href = "letter.html";
-      }, 2500);
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 1000);
     }
 
-    requestAnimationFrame(checkBlow);
+    index++;
+    setTimeout(typeName, 120);
   }
+}
 
-  checkBlow();
+setTimeout(typeName, 800);
 
-}).catch(() => {
 
-  document.getElementById("msg").innerHTML = "Tap to blow candles 🕯️";
+/* 🎤 MIC LOGIC */
+let blown = false;
 
-  document.body.onclick = () => {
-    document.querySelectorAll(".flame").forEach(f => f.innerHTML = "💨");
+function startMic() {
 
-    document.getElementById("roomGlow").style.background =
-      "radial-gradient(circle at center, rgba(0,0,0,0.1), black 80%)";
+  document.getElementById("startBtn").style.display = "none";
+  document.getElementById("msg").innerHTML = "Blow the candles 🕯️💨";
 
-    setTimeout(() => {
-      window.location.href = "letter.html";
-    }, 2000);
-  };
-});
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const mic = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+
+    mic.connect(analyser);
+    const data = new Uint8Array(analyser.frequencyBinCount);
+
+    function checkBlow() {
+      analyser.getByteFrequencyData(data);
+
+      let volume = data.reduce((a, b) => a + b) / data.length;
+
+      if (volume > 50 && !blown) {
+        blown = true;
+
+        document.querySelectorAll(".flame").forEach(f => {
+          f.innerHTML = "💨";
+        });
+
+        document.getElementById("msg").innerHTML = "Make a wish ❤️";
+
+        setTimeout(() => {
+          window.location.href = "letter.html";
+        }, 2500);
+      }
+
+      requestAnimationFrame(checkBlow);
+    }
+
+    checkBlow();
+
+  }).catch(() => {
+
+    document.getElementById("msg").innerHTML = "Tap anywhere to blow 🕯️";
+
+    document.body.onclick = () => {
+      document.querySelectorAll(".flame").forEach(f => f.innerHTML = "💨");
+      setTimeout(() => {
+        window.location.href = "letter.html";
+      }, 2000);
+    };
+  });
+}
 
 </script>
 
