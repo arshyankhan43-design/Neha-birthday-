@@ -12,90 +12,111 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  font-family: Arial;
+  flex-direction: column;
   color: white;
-  overflow: hidden;
+  font-family: Arial;
 }
 
 /* 🎂 cake */
 #cake {
-  font-size: 120px;
+  font-size: 160px;
   cursor: pointer;
-  transition: 0.5s;
+  position: relative;
 }
 
-/* ✨ glow after cut */
-.cut {
-  transform: scale(1.3);
-  text-shadow: 0 0 30px #ff4d6d;
-}
-
-/* 🎉 confetti */
-.confetti {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  background: white;
-  top: -10px;
-  animation: fall linear forwards;
-}
-
-@keyframes fall {
-  to {
-    transform: translateY(110vh) rotate(360deg);
-  }
-}
-
-/* text */
-#msg {
+/* 🕯 candle */
+#flame {
   position: absolute;
-  bottom: 80px;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px;
+  animation: flicker 0.2s infinite;
+}
+
+/* 🔥 flame flicker */
+@keyframes flicker {
+  0% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.2); }
+  100% { transform: translateX(-50%) scale(1); }
+}
+
+/* hidden flame */
+.off {
+  opacity: 0;
+}
+
+/* message */
+#msg {
+  margin-top: 20px;
   font-size: 20px;
+  opacity: 0;
+  transition: 0.5s;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎂 cake -->
-<div id="cake" onclick="cutCake()">🎂</div>
+<div id="cake" onclick="blowCandle()">
+  🎂
+  <div id="flame">🔥</div>
+</div>
 
-<div id="msg">Tap the cake 🎂</div>
-
-<!-- 🎵 sound -->
-<audio id="cutSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+<p>Blow the candle 🕯 or tap the cake</p>
+<div id="msg"></div>
 
 <script>
 
-function cutCake() {
+// 🎤 MIC BLOW DETECTION
+navigator.mediaDevices.getUserMedia({ audio: true })
+.then(stream => {
+  const audioContext = new AudioContext();
+  const mic = audioContext.createMediaStreamSource(stream);
+  const analyser = audioContext.createAnalyser();
 
-  let cake = document.getElementById("cake");
-  let msg = document.getElementById("msg");
-  let sound = document.getElementById("cutSound");
+  mic.connect(analyser);
+  analyser.fftSize = 256;
 
-  if (sound) sound.play().catch(()=>{});
+  const data = new Uint8Array(analyser.frequencyBinCount);
 
-  // 🎂 animation
-  cake.classList.add("cut");
-  cake.innerHTML = "🍰"; // change to slice
+  function checkSound() {
+    analyser.getByteFrequencyData(data);
+    let volume = data.reduce((a,b)=>a+b)/data.length;
 
-  msg.innerHTML = "Happy Birthday My Love ❤️";
+    if (volume > 60) { // 🔥 blow detected
+      blowCandle();
+    }
 
-  // 🎉 confetti
-  for (let i = 0; i < 50; i++) {
-    let c = document.createElement("div");
-    c.className = "confetti";
-    c.style.left = Math.random() * 100 + "vw";
-    c.style.animationDuration = (2 + Math.random()*3) + "s";
-    document.body.appendChild(c);
-
-    setTimeout(() => c.remove(), 4000);
+    requestAnimationFrame(checkSound);
   }
 
-  // 💌 go to letter page
+  checkSound();
+}).catch(() => {
+  console.log("Mic not allowed");
+});
+
+
+// 🕯 blow function
+function blowCandle() {
+
+  let flame = document.getElementById("flame");
+  let msg = document.getElementById("msg");
+
+  if (flame.classList.contains("off")) return;
+
+  flame.classList.add("off");
+
+  // vibration
+  if (navigator.vibrate) navigator.vibrate(100);
+
+  msg.innerHTML = "Make a wish ❤️✨";
+  msg.style.opacity = "1";
+
+  // 🎉 go next
   setTimeout(() => {
     window.location.href = "letter.html";
-  }, 3000);
+  }, 2500);
 }
 
 </script>
