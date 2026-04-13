@@ -15,26 +15,23 @@ body {
 /* 🎈 balloons */
 .balloon {
   position: absolute;
-  font-size: 12vw;
+  font-size: clamp(70px, 11vw, 120px);
   cursor: pointer;
-  animation: floatUp 10s linear infinite;
-  transition: transform 0.2s;
-}
-
-.balloon:hover {
-  transform: scale(1.2);
+  animation: floatUp linear infinite;
+  user-select: none;
+  z-index: 2;
 }
 
 @keyframes floatUp {
-  from { transform: translateY(100vh); }
-  to { transform: translateY(-120vh); }
+  from { transform: translateY(110vh); }
+  to { transform: translateY(-130vh); }
 }
 
-/* 💥 pop */
+/* 💥 pop effect */
 .pop {
-  transform: scale(1.6);
+  transform: scale(1.8);
   opacity: 0;
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
 /* 💌 memory box */
@@ -43,7 +40,7 @@ body {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.8);
   background: rgba(0,0,0,0.9);
   color: white;
   padding: 20px;
@@ -51,6 +48,9 @@ body {
   text-align: center;
   width: 85%;
   max-width: 350px;
+  z-index: 10;
+  opacity: 0;
+  transition: 0.3s;
 }
 
 #memoryImg {
@@ -67,6 +67,20 @@ button {
   color: white;
 }
 
+/* ✨ background glow */
+body::after {
+  content: "";
+  position: fixed;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,77,109,0.15), transparent);
+  animation: glow 6s infinite alternate;
+}
+
+@keyframes glow {
+  from { transform: scale(1); }
+  to { transform: scale(1.2); }
+}
 </style>
 </head>
 
@@ -83,19 +97,30 @@ button {
 </div>
 
 <!-- 🎈 balloons -->
-<div class="balloon" onclick="popBalloon(this,'pic1.jpg','Our first memory ❤️')">🎈</div>
-<div class="balloon" onclick="popBalloon(this,'pic2.jpg','You make me smile 💖')">🎈</div>
-<div class="balloon" onclick="popBalloon(this,'pic3.jpg','I love you forever 🥺')">🎈</div>
-
-<!-- 🎈 last balloon -->
+<div class="balloon" onclick="popBalloon(this,'IMG-20260331-WA0009.jpg','Our first memory ❤️')">🎈</div>
+<div class="balloon" onclick="popBalloon(this,'IMG-20260402-WA0004.jpg','You make me smile 💖')">🎈</div>
+<div class="balloon" onclick="popBalloon(this,'IMG-20260402-WA0006.jpg','I love you forever 🥺')">🎈</div>
 <div class="balloon" onclick="goNext(this)">🎈</div>
 
 <script>
 
-// random position
-document.querySelectorAll(".balloon").forEach(b => {
-  b.style.left = Math.random() * 90 + "vw";
+// 🎯 PERFECT SPREAD (no overlap)
+let balloons = document.querySelectorAll(".balloon");
+
+balloons.forEach((b, i) => {
+
+  let gap = 100 / balloons.length;
+
+  // horizontal spread
+  b.style.left = (i * gap + 5) + "vw";
+
+  // random speed
+  b.style.animationDuration = (6 + Math.random() * 5) + "s";
+
+  // different start time (IMPORTANT)
+  b.style.animationDelay = (Math.random() * 6) + "s";
 });
+
 
 // 🎈 pop balloon
 function popBalloon(el, img, text) {
@@ -111,6 +136,12 @@ function popBalloon(el, img, text) {
   let textEl = document.getElementById("memoryText");
 
   box.style.display = "block";
+
+  setTimeout(() => {
+    box.style.opacity = "1";
+    box.style.transform = "translate(-50%, -50%) scale(1)";
+  }, 50);
+
   imgEl.src = img;
 
   let i = 0;
@@ -120,20 +151,29 @@ function popBalloon(el, img, text) {
     if (i < text.length) {
       textEl.innerHTML += text[i];
       i++;
-      setTimeout(type, 40);
+      setTimeout(type, 35);
     }
   }
 
   type();
 }
 
-// close memory
+
+// ❌ close memory
 function closeMemory() {
-  document.getElementById("memoryBox").style.display = "none";
+  let box = document.getElementById("memoryBox");
+  box.style.opacity = "0";
+  box.style.transform = "translate(-50%, -50%) scale(0.8)";
+
+  setTimeout(() => {
+    box.style.display = "none";
+  }, 300);
 }
+
 
 // 🎈 last balloon → cake
 function goNext(el) {
+
   let sound = document.getElementById("popSound");
   if (sound) sound.play().catch(()=>{});
 
@@ -141,7 +181,7 @@ function goNext(el) {
 
   setTimeout(() => {
     window.location.href = "cake.html";
-  }, 400);
+  }, 500);
 }
 
 </script>
