@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memories 🎈</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  background: linear-gradient(to top, #ff758c, #ff7eb3);
+  font-family: sans-serif;
+  text-align: center;
+  color: white;
+}
+
+h2 {
+  margin-top: 20px;
+}
+
+/* 🎈 Balloon */
+.balloon {
+  width: 70px;
+  height: 90px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -100px;
+  cursor: pointer;
+  animation: floatUp linear infinite;
+}
+
+/* random colors + positions */
+.balloon:nth-child(2){ left:10%; background:red; animation-duration:7s;}
+.balloon:nth-child(3){ left:30%; background:blue; animation-duration:9s;}
+.balloon:nth-child(4){ left:50%; background:yellow; animation-duration:8s;}
+.balloon:nth-child(5){ left:70%; background:purple; animation-duration:10s;}
+.balloon:nth-child(6){ left:85%; background:orange; animation-duration:6s;}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-110vh); }
+}
+
+/* 💥 Pop */
+.pop {
+  animation: popAnim 0.4s forwards;
+}
+
+@keyframes popAnim {
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* 💌 Memory box */
+#memoryBox {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  color: black;
+  padding: 15px;
+  border-radius: 15px;
+  display: none;
+  width: 80%;
+  max-width: 300px;
+}
+
+#memoryBox img {
+  width: 100%;
+  border-radius: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Tap Balloons 🎈</h2>
+
+<!-- 🎈 Balloons -->
+<div class="balloon" onclick="popBalloon(this,'img1.jpg','Our first memory ❤️')"></div>
+<div class="balloon" onclick="popBalloon(this,'img2.jpg','Best day ever 😘')"></div>
+<div class="balloon" onclick="popBalloon(this,'img3.jpg','You make me happiest 💖')"></div>
+
+<!-- 🎈 LAST balloon → go to cake -->
+<div class="balloon" onclick="goNext(this)"></div>
+
+<!-- 💌 Memory box -->
+<div id="memoryBox">
+  <img id="memoryImg">
+  <p id="memoryText"></p>
+</div>
+
+<!-- 🔊 Pop sound -->
+<audio id="popSound" src="pop.mp3"></audio>
+
+<script>
+function popBalloon(el, img, text) {
+  document.getElementById("popSound").play();
+
+  el.classList.add("pop");
+
+  setTimeout(() => {
+    el.style.display = "none";
+  }, 300);
+
+  document.getElementById("memoryBox").style.display = "block";
+  document.getElementById("memoryImg").src = img;
+  document.getElementById("memoryText").innerText = text;
+}
+
+function goNext(el) {
+  document.getElementById("popSound").play();
+
+  el.classList.add("pop");
+
+  setTimeout(() => {
+    window.location.href = "cake.html";
+  }, 400);
+}
+</script>
+
+</body>
+</html>
