@@ -72,7 +72,7 @@ button {
 
 <!-- INTRO -->
 <div id="intro">
-  <h1>For my dear sweetie cutie rasmali ❤️< </h1>
+  <h1>For my dear sweetie cutie rasmali ❤️</h1>
   <button onclick="goNext()">Tap to Enter</button>
 </div>
 
@@ -80,8 +80,12 @@ button {
 
 /* ❤️ BUTTON CLICK → GO TO LETTER PAGE */
 function goNext() {
-  window.location.href = "letter.html";
-}
+  document.getElementById("intro").style.display = "none";
+  setTimeout(() => {
+    window.location.href = "balloons.html";
+  }, 500);
+
+  }
 
 /* 💖 FLOATING HEARTS */
 setInterval(() => {
