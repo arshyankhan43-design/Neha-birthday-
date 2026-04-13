@@ -15,9 +15,14 @@ body {
 /* 🎈 balloons */
 .balloon {
   position: absolute;
-  font-size: 40px;
+  font-size: 80px;
   cursor: pointer;
-  animation: floatUp 6s linear infinite;
+  animation: floatUp 10s linear infinite;
+  transition: transform 0.2s;
+}
+
+.balloon:hover {
+  transform: scale(1.2);
 }
 
 @keyframes floatUp {
