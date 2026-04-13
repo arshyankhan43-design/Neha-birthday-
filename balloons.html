@@ -1,48 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Balloons ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  background: black;
+  font-family: Arial;
+}
+
+/* 🎈 balloons */
+.balloon {
+  position: absolute;
+  font-size: 40px;
+  cursor: pointer;
+  animation: floatUp 6s linear infinite;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-120vh); }
+}
+
+/* 💥 pop */
+.pop {
+  transform: scale(1.6);
+  opacity: 0;
+  transition: 0.3s;
+}
+
+/* 💌 memory box */
+#memoryBox {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.9);
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  width: 85%;
+  max-width: 350px;
+}
+
+#memoryImg {
+  width: 100%;
+  border-radius: 10px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  background: #ff4d6d;
+  color: white;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- 🎵 sound -->
+<audio id="popSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+
+<!-- 💌 memory -->
+<div id="memoryBox">
+  <img id="memoryImg">
+  <p id="memoryText"></p>
+  <button onclick="closeMemory()">Close ❤️</button>
+</div>
+
+<!-- 🎈 balloons -->
+<div class="balloon" onclick="popBalloon(this,'pic1.jpg','Our first memory ❤️')">🎈</div>
+<div class="balloon" onclick="popBalloon(this,'pic2.jpg','You make me smile 💖')">🎈</div>
+<div class="balloon" onclick="popBalloon(this,'pic3.jpg','I love you forever 🥺')">🎈</div>
+
+<!-- 🎈 last balloon -->
+<div class="balloon" onclick="goNext(this)">🎈</div>
+
 <script>
 
-// 🎈 POP BALLOON → SHOW MEMORY + TYPING
+// random position
+document.querySelectorAll(".balloon").forEach(b => {
+  b.style.left = Math.random() * 90 + "vw";
+});
+
+// 🎈 pop balloon
 function popBalloon(el, img, text) {
-  document.getElementById("popSound").play();
 
-  // 💥 pop animation
+  let sound = document.getElementById("popSound");
+  if (sound) sound.play().catch(()=>{});
+
   el.classList.add("pop");
-  setTimeout(() => {
-    el.style.display = "none";
-  }, 300);
+  setTimeout(() => el.remove(), 300);
 
-  // 💌 show memory box
   let box = document.getElementById("memoryBox");
-  box.style.display = "block";
-
-  // 🖼 image
-  document.getElementById("memoryImg").src = img;
-
-  // 💌 typing effect
-  let i = 0;
-  let speed = 40;
+  let imgEl = document.getElementById("memoryImg");
   let textEl = document.getElementById("memoryText");
+
+  box.style.display = "block";
+  imgEl.src = img;
+
+  let i = 0;
   textEl.innerHTML = "";
 
-  function typeWriter() {
+  function type() {
     if (i < text.length) {
-      textEl.innerHTML += text.charAt(i);
+      textEl.innerHTML += text[i];
       i++;
-      setTimeout(typeWriter, speed);
+      setTimeout(type, 40);
     }
   }
 
-  typeWriter();
+  type();
 }
 
-// 🎈 LAST BALLOON → GO TO CAKE PAGE
+// close memory
+function closeMemory() {
+  document.getElementById("memoryBox").style.display = "none";
+}
+
+// 🎈 last balloon → cake
 function goNext(el) {
-  document.getElementById("popSound").play();
+  let sound = document.getElementById("popSound");
+  if (sound) sound.play().catch(()=>{});
 
   el.classList.add("pop");
 
   setTimeout(() => {
-    window.location.href = "Cake.html";
+    window.location.href = "cake.html";
   }, 400);
 }
 
 </script>
+
+</body>
+</html>
