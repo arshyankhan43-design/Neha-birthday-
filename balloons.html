@@ -20,6 +20,11 @@ body {
   animation: floatUp linear infinite;
   user-select: none;
   z-index: 2;
+  transition: transform 0.2s;
+}
+
+.balloon:hover {
+  transform: scale(1.15);
 }
 
 @keyframes floatUp {
@@ -27,11 +32,26 @@ body {
   to { transform: translateY(-130vh); }
 }
 
-/* 💥 pop effect */
+/* 💥 pop */
 .pop {
-  transform: scale(1.8);
+  transform: scale(2);
   opacity: 0;
   transition: all 0.3s ease;
+}
+
+/* 💥 particles */
+.particle {
+  position: fixed;
+  font-size: 20px;
+  pointer-events: none;
+  animation: explode 0.6s forwards;
+}
+
+@keyframes explode {
+  to {
+    transform: translate(var(--x), var(--y)) scale(0);
+    opacity: 0;
+  }
 }
 
 /* 💌 memory box */
@@ -67,7 +87,7 @@ button {
   color: white;
 }
 
-/* ✨ background glow */
+/* ✨ glow background */
 body::after {
   content: "";
   position: fixed;
@@ -96,30 +116,49 @@ body::after {
   <button onclick="closeMemory()">Close ❤️</button>
 </div>
 
-<!-- 🎈 balloons -->
-<div class="balloon" onclick="popBalloon(this,'pic1.jpg',')">🎈</div>
-<div class="balloon" onclick="popBalloon(this,'pic2.jpg',')">🎈</div>
-<div class="balloon" onclick="popBalloon(this,'pic3.jpg',')">🎈</div>
+<!-- 🎈 balloons (PUT YOUR REAL IMAGE NAMES HERE) -->
+<div class="balloon" onclick="popBalloon(this,'IMG-20260331-WA0009.jpg','Our first memory ❤️')">🎈</div>
+
+<div class="balloon" onclick="popBalloon(this,'IMG-20260402-WA0004.jpg','You make me smile 💖')">🎈</div>
+
+<div class="balloon" onclick="popBalloon(this,'IMG-20260402-WA0006.jpg','I love you forever 🥺')">🎈</div>
+
+<!-- 🎈 last balloon -->
 <div class="balloon" onclick="goNext(this)">🎈</div>
 
 <script>
 
-// 🎯 PERFECT SPREAD (no overlap)
+// 🎯 perfect spread
 let balloons = document.querySelectorAll(".balloon");
 
 balloons.forEach((b, i) => {
-
   let gap = 100 / balloons.length;
-
-  // horizontal spread
   b.style.left = (i * gap + 5) + "vw";
-
-  // random speed
   b.style.animationDuration = (6 + Math.random() * 5) + "s";
-
-  // different start time (IMPORTANT)
   b.style.animationDelay = (Math.random() * 6) + "s";
 });
+
+
+// 💥 particle explosion
+function explode(x, y) {
+  for (let i = 0; i < 8; i++) {
+    let p = document.createElement("div");
+    p.className = "particle";
+    p.innerHTML = "❤️";
+
+    let angle = Math.random() * 2 * Math.PI;
+    let dist = 60;
+
+    p.style.setProperty("--x", Math.cos(angle)*dist + "px");
+    p.style.setProperty("--y", Math.sin(angle)*dist + "px");
+
+    p.style.left = x + "px";
+    p.style.top = y + "px";
+
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 600);
+  }
+}
 
 
 // 🎈 pop balloon
@@ -127,6 +166,12 @@ function popBalloon(el, img, text) {
 
   let sound = document.getElementById("popSound");
   if (sound) sound.play().catch(()=>{});
+
+  // 📱 vibration
+  if (navigator.vibrate) navigator.vibrate(50);
+
+  let rect = el.getBoundingClientRect();
+  explode(rect.left, rect.top);
 
   el.classList.add("pop");
   setTimeout(() => el.remove(), 300);
@@ -164,10 +209,7 @@ function closeMemory() {
   let box = document.getElementById("memoryBox");
   box.style.opacity = "0";
   box.style.transform = "translate(-50%, -50%) scale(0.8)";
-
-  setTimeout(() => {
-    box.style.display = "none";
-  }, 300);
+  setTimeout(() => box.style.display = "none", 300);
 }
 
 
@@ -176,6 +218,8 @@ function goNext(el) {
 
   let sound = document.getElementById("popSound");
   if (sound) sound.play().catch(()=>{});
+
+  if (navigator.vibrate) navigator.vibrate(80);
 
   el.classList.add("pop");
 
