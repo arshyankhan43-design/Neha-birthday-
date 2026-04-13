@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cut the Cake 🎂</title>
+
+<style>
+body {
+  margin: 0;
+  background: black;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+  font-family: sans-serif;
+  text-align: center;
+}
+
+/* 🎂 Cake */
+.cake {
+  font-size: 100px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+/* 🫨 shake before cut */
+.shake {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  75% { transform: translateX(-10px); }
+  100% { transform: translateX(0); }
+}
+
+/* 💥 cut effect */
+.cut {
+  animation: cutAnim 0.5s forwards;
+}
+
+@keyframes cutAnim {
+  100% { transform: scale(1.5) rotate(10deg); opacity: 0; }
+}
+
+/* 🎉 Confetti */
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  top: 0;
+  animation: fall 3s linear infinite;
+}
+
+@keyframes fall {
+  to { transform: translateY(100vh); }
+}
+</style>
+</head>
+
+<body>
+
+<h2>Tap to cut the cake 🎂</h2>
+
+<div id="cake" class="cake" onclick="cutCake()">🎂</div>
+
+<audio id="cutSound" src="pop.mp3"></audio>
+
+<script>
+function cutCake() {
+  let cake = document.getElementById("cake");
+  let sound = document.getElementById("cutSound");
+
+  if (sound) sound.play();
+
+  // 🫨 shake first
+  cake.classList.add("shake");
+
+  setTimeout(() => {
+    cake.classList.remove("shake");
+
+    // 💥 cut animation
+    cake.classList.add("cut");
+
+    // 🎉 confetti blast
+    for (let i = 0; i < 40; i++) {
+      let c = document.createElement("div");
+      c.className = "confetti";
+      c.style.left = Math.random() * 100 + "vw";
+      c.style.background = ["red","yellow","blue","pink"][Math.floor(Math.random()*4)];
+      document.body.appendChild(c);
+
+      setTimeout(() => c.remove(), 3000);
+    }
+
+  }, 400);
+
+  // 💌 message
+  setTimeout(() => {
+    alert("Happy Birthday My rasmali❤️🎉");
+  }, 800);
+
+  // ➡️ go to letter page
+  setTimeout(() => {
+    window.location.href = "letter.html";
+  }, 2000);
+}
+</script>
+
+</body>
+</html>
