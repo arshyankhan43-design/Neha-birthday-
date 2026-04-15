@@ -23,7 +23,7 @@ body {
   position: fixed;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,77,109,0.15), transparent);
+  background: radial-gradient(circle, rgba(255,77,109,0.2), transparent);
   animation: moveGlow 8s infinite alternate;
 }
 @keyframes moveGlow {
@@ -34,14 +34,13 @@ body {
 /* 💖 name */
 #nameGlow {
   position: absolute;
-  top: 40%;
+  top: 30%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 32px;
+  font-size: 36px;
   font-weight: bold;
-  z-index: 2;
   color: #ff4d6d;
-  text-shadow: 0 0 15px #ff4d6d, 0 0 30px #ff4d6d, 0 0 60px #ff4d6d;
+  text-shadow: 0 0 20px #ff4d6d, 0 0 40px #ff4d6d;
 }
 
 /* ✨ sparkle */
@@ -50,7 +49,6 @@ body {
   color: #ff4d6d;
   font-size: 14px;
   animation: sparkleAnim 1s linear forwards;
-  pointer-events: none;
 }
 @keyframes sparkleAnim {
   to {
@@ -61,14 +59,13 @@ body {
 
 /* 🎂 cake */
 #cake {
-  font-size: 280px;
+  font-size: 300px;
   margin-top: 60px;
   position: relative;
-  z-index: 2;
-  text-shadow: 0 0 30px #ff4d6d, 0 0 60px rgba(255,77,109,0.7);
-  animation: cakeFloat 3s ease-in-out infinite;
+  text-shadow: 0 0 40px #ff4d6d;
+  animation: float 3s ease-in-out infinite;
 }
-@keyframes cakeFloat {
+@keyframes float {
   0%,100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
@@ -76,38 +73,53 @@ body {
 /* 🕯️ candle */
 .candle {
   position: absolute;
-  top: -60px;
-  font-size: 30px;
+  top: -70px;
+  font-size: 32px;
 }
 
-/* message */
-#msg {
-  margin-top: 20px;
-  z-index: 2;
+/* 💨 smoke */
+.smoke {
+  position: absolute;
+  font-size: 20px;
+  animation: smokeUp 2s forwards;
+}
+@keyframes smokeUp {
+  to {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+}
+
+/* 💖 heart explosion */
+.heart {
+  position: fixed;
+  pointer-events: none;
+  animation: explode 1.2s ease-out forwards;
+}
+@keyframes explode {
+  to {
+    transform: translate(var(--x), var(--y)) scale(0);
+    opacity: 0;
+  }
 }
 
 /* button */
 #startBtn {
   margin-top: 25px;
-  padding: 16px 40px; /* bigger */
+  padding: 18px 45px;
   border-radius: 40px;
   border: none;
   background: linear-gradient(45deg, #ff4d6d, #ff758f);
   color: white;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
-  z-index: 2;
-
-  box-shadow:
-    0 0 15px #ff4d6d,
-    0 0 30px rgba(255,77,109,0.6);
-
-  transition: 0.3s;
+  box-shadow: 0 0 20px #ff4d6d;
 }
 
-#startBtn:active {
-  transform: scale(0.95);
+/* message */
+#msg {
+  margin-top: 15px;
 }
 </style>
 </head>
@@ -116,15 +128,13 @@ body {
 
 <div id="bgGlow"></div>
 
-<!-- 💖 name -->
 <div id="nameGlow"></div>
 
-<!-- 🎂 cake -->
 <div id="cake">
   🎂
-  <div class="candle" style="left:-40px;"><span class="flame">🔥</span></div>
+  <div class="candle" style="left:-50px;"><span class="flame">🔥</span></div>
   <div class="candle" style="left:0px;"><span class="flame">🔥</span></div>
-  <div class="candle" style="left:40px;"><span class="flame">🔥</span></div>
+  <div class="candle" style="left:50px;"><span class="flame">🔥</span></div>
 </div>
 
 <div id="msg">Tap start to blow candles 🎤</div>
@@ -132,85 +142,117 @@ body {
 
 <script>
 
-/* 💖 NAME TYPING + SPARKLES */
-let text = "Happy Birthday day Neha ji ⚘️💋";
-let index = 0;
+/* 💖 typing */
+let text = "Happy Birthday Neha ❤️";
+let i = 0;
 
-function typeName() {
-function typeName() {
-  if (index < text.length) {
+function type() {
+  if (i < text.length) {
     let el = document.getElementById("nameGlow");
+    el.innerHTML += text[i];
 
-    el.innerHTML += text[index];
+    let rect = el.getBoundingClientRect();
 
-    // little glow pulse on each letter
-    el.style.transform = "translateX(-50%) scale(1.05)";
-    setTimeout(() => {
-      el.style.transform = "translateX(-50%) scale(1)";
-    }, 100);
+    for (let k = 0; k < 2; k++) {
+      let s = document.createElement("div");
+      s.className = "sparkle";
+      s.innerHTML = "✨";
+      s.style.left = rect.left + Math.random()*rect.width + "px";
+      s.style.top = rect.top + "px";
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(),1000);
+    }
 
-    index++;
-    setTimeout(typeName, 280); // 💖 slow + smooth
+    i++;
+    setTimeout(type, 250);
   }
 }
-setTimeout(typeName, 600);
+setTimeout(type, 600);
 
 
-/* 🎤 MIC LOGIC */
+/* 💨 + 💖 explosion */
+function blowCandles() {
+
+  document.querySelectorAll(".flame").forEach(f => {
+    let smoke = document.createElement("div");
+    smoke.className = "smoke";
+    smoke.innerHTML = "💨";
+    f.parentElement.appendChild(smoke);
+    f.innerHTML = "";
+  });
+
+  let cake = document.getElementById("cake").getBoundingClientRect();
+
+  for (let j = 0; j < 50; j++) {
+    let h = document.createElement("div");
+    h.className = "heart";
+    h.innerHTML = "💖";
+
+    let size = 16 + Math.random()*20;
+    h.style.fontSize = size + "px";
+
+    h.style.left = cake.left + cake.width/2 + "px";
+    h.style.top = cake.top + cake.height/2 + "px";
+
+    let x = (Math.random() - 0.5) * 500 + "px";
+    let y = (Math.random() - 0.5) * 500 + "px";
+
+    h.style.setProperty("--x", x);
+    h.style.setProperty("--y", y);
+
+    document.body.appendChild(h);
+
+    setTimeout(()=>h.remove(),1200);
+  }
+
+  document.getElementById("msg").innerHTML = "Make a wish ❤️";
+
+  setTimeout(()=>{
+    window.location.href = "letter.html";
+  }, 2200);
+}
+
+
+/* 🎤 mic */
 let blown = false;
 
 function startMic() {
 
   let btn = document.getElementById("startBtn");
-  btn.innerHTML = "Listening... 🎤";
+  btn.innerHTML = "Listening...";
   btn.disabled = true;
-
-  document.getElementById("msg").innerHTML = "Blow the candles 🕯️💨";
 
   navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
 
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const mic = audioContext.createMediaStreamSource(stream);
-    const analyser = audioContext.createAnalyser();
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const mic = ctx.createMediaStreamSource(stream);
+    const analyser = ctx.createAnalyser();
 
     mic.connect(analyser);
     const data = new Uint8Array(analyser.frequencyBinCount);
 
-    function checkBlow() {
+    function check() {
       analyser.getByteFrequencyData(data);
+      let vol = data.reduce((a,b)=>a+b)/data.length;
 
-      let volume = data.reduce((a, b) => a + b) / data.length;
-
-      if (volume > 35 && !blown) {
+      if (vol > 35 && !blown) {
         blown = true;
-
-        document.querySelectorAll(".flame").forEach(f => {
-          f.innerHTML = "💨";
-          f.style.animation = "none";
-        });
-
-        document.getElementById("msg").innerHTML = "Make a wish ❤️";
-
-        setTimeout(() => {
-          window.location.href = "letter.html";
-        }, 2500);
+        blowCandles();
       }
-
-      requestAnimationFrame(checkBlow);
+      requestAnimationFrame(check);
     }
 
-    checkBlow();
+    check();
 
-  }).catch(() => {
+  }).catch(()=>{
 
     document.getElementById("msg").innerHTML = "Tap anywhere to blow 🕯️";
 
     document.body.onclick = () => {
-      document.querySelectorAll(".flame").forEach(f => f.innerHTML = "💨");
-
-      setTimeout(() => {
-        window.location.href = "letter.html";
-      }, 2000);
+      if (!blown) {
+        blown = true;
+        blowCandles();
+      }
     };
   });
 }
