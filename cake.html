@@ -217,7 +217,9 @@ function startMic() {
 }
 
 /* ✅ FORCE BUTTON CLICK WORK */
-document.getElementById("startBtn").addEventListener("click", startMic);
+window.addEventListener("load", function () {
+  document.getElementById("startBtn").addEventListener("click", startMic);
+});
 
 </script>
 
