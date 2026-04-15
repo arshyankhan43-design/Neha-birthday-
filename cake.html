@@ -41,7 +41,7 @@ body {
   font-weight: bold;
   z-index: 2;
   color: #ff4d6d;
-  text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d, 0 0 40px #ff4d6d;
+  text-shadow: 0 0 15px #ff4d6d, 0 0 30px #ff4d6d, 0 0 60px #ff4d6d;
 }
 
 /* ✨ sparkle */
@@ -61,11 +61,11 @@ body {
 
 /* 🎂 cake */
 #cake {
-  font-size: 220px;
-  margin-top: 40px;
+  font-size: 280px;
+  margin-top: 60px;
   position: relative;
   z-index: 2;
-  text-shadow: 0 0 20px #ff4d6d, 0 0 40px rgba(255,77,109,0.6);
+  text-shadow: 0 0 30px #ff4d6d, 0 0 60px rgba(255,77,109,0.7);
   animation: cakeFloat 3s ease-in-out infinite;
 }
 @keyframes cakeFloat {
@@ -80,25 +80,6 @@ body {
   font-size: 30px;
 }
 
-/* 🔥 flame */
-.flame {
-  color: orange;
-  animation: flicker 0.15s infinite alternate;
-}
-.flame::after {
-  content: "";
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  background: radial-gradient(circle, rgba(255,160,0,0.9), transparent);
-  border-radius: 50%;
-  filter: blur(10px);
-}
-@keyframes flicker {
-  from { transform: scale(1); }
-  to { transform: scale(1.2); }
-}
-
 /* message */
 #msg {
   margin-top: 20px;
@@ -107,15 +88,26 @@ body {
 
 /* button */
 #startBtn {
-  margin-top: 15px;
-  padding: 12px 25px;
-  border-radius: 25px;
+  margin-top: 25px;
+  padding: 16px 40px; /* bigger */
+  border-radius: 40px;
   border: none;
-  background: #ff4d6d;
+  background: linear-gradient(45deg, #ff4d6d, #ff758f);
   color: white;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
   z-index: 2;
+
+  box-shadow:
+    0 0 15px #ff4d6d,
+    0 0 30px rgba(255,77,109,0.6);
+
+  transition: 0.3s;
+}
+
+#startBtn:active {
+  transform: scale(0.95);
 }
 </style>
 </head>
@@ -141,7 +133,7 @@ body {
 <script>
 
 /* 💖 NAME TYPING + SPARKLES */
-let text = "Neha ❤️";
+let text = "Happy Birthday day Neha ji ⚘️💋";
 let index = 0;
 
 function typeName() {
