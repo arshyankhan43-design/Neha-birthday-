@@ -64,7 +64,7 @@ body {
 }
 @keyframes explode {
   to {
-    transform: translateY(-100px) scale(0);
+    transform: translateY(-120px) scale(0);
     opacity: 0;
   }
 }
@@ -85,8 +85,13 @@ body {
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
-
   box-shadow: 0 0 20px #ff4d6d;
+}
+
+  /* 🎬 zoom effect */
+.zoom {
+  transform: scale(1.6) !important;
+  transition: transform 0.8s ease-in-out;
 }
 </style>
 </head>
@@ -100,7 +105,7 @@ body {
 <div id="cake">🎂</div>
 
 <div id="msg">Tap start to blow candles 🎤</div>
-<button id="startBtn" onclick="startMic()">Start 🎤</button>
+<button id="startBtn">Start 🎤</button>
 
 <script>
 
@@ -112,24 +117,36 @@ function typeName() {
   if (i < text.length) {
     document.getElementById("nameGlow").innerHTML += text[i];
     i++;
-    setTimeout(typeName, 200); // slower typing
+    setTimeout(typeName, 200);
   }
 }
 typeName();
 
 /* ❤️ HEART EXPLOSION */
 function explodeHearts() {
-  for (let i = 0; i < 20; i++) {
-    let h = document.createElement("div");
-    h.className = "heart";
-    h.innerHTML = "❤️";
 
-    h.style.left = (window.innerWidth/2 + (Math.random()*200-100)) + "px";
-    h.style.top = (window.innerHeight/2) + "px";
+  let cake = document.getElementById("cake");
 
-    document.body.appendChild(h);
-    setTimeout(() => h.remove(), 1000);
-  }
+  // 🎬 zoom first
+  cake.classList.add("zoom");
+
+  // wait for zoom animation
+  setTimeout(() => {
+
+    // 💥 hearts
+    for (let i = 0; i < 30; i++) {
+      let h = document.createElement("div");
+      h.className = "heart";
+      h.innerHTML = "❤️";
+
+      h.style.left = (window.innerWidth/2 + (Math.random()*400-200)) + "px";
+      h.style.top = (window.innerHeight/2) + "px";
+
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 1000);
+    }
+
+  }, 800); // after zoom
 }
 
 /* 🎤 MIC */
@@ -146,17 +163,25 @@ function startMic() {
   navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
 
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    if (audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+
     const mic = audioContext.createMediaStreamSource(stream);
     const analyser = audioContext.createAnalyser();
 
+    analyser.fftSize = 256;
     mic.connect(analyser);
+
     const data = new Uint8Array(analyser.frequencyBinCount);
 
     function check() {
       analyser.getByteFrequencyData(data);
+
       let volume = data.reduce((a,b)=>a+b)/data.length;
 
-      if (volume > 35 && !blown) {
+      if (volume > 25 && !blown) {
         blown = true;
 
         document.getElementById("msg").innerHTML = "Make a wish ❤️";
@@ -175,17 +200,24 @@ function startMic() {
 
   }).catch(() => {
 
-    document.getElementById("msg").innerHTML = "Tap anywhere to blow";
+    document.getElementById("msg").innerHTML = "Tap anywhere 💨";
 
     document.body.onclick = () => {
-      explodeHearts();
+      if (!blown) {
+        blown = true;
 
-      setTimeout(() => {
-        window.location.href = "letter.html";
-      }, 2000);
+        explodeHearts();
+
+        setTimeout(() => {
+          window.location.href = "letter.html";
+        }, 2500);
+      }
     };
   });
 }
+
+/* ✅ FORCE BUTTON CLICK WORK */
+document.getElementById("startBtn").addEventListener("click", startMic);
 
 </script>
 
