@@ -23,7 +23,7 @@ body {
   position: fixed;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,77,109,0.2), transparent);
+  background: radial-gradient(circle, rgba(255,77,109,0.15), transparent);
   animation: moveGlow 8s infinite alternate;
 }
 @keyframes moveGlow {
@@ -34,34 +34,19 @@ body {
 /* 💖 name */
 #nameGlow {
   position: absolute;
-  top: 30%;
+  top: 38%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 36px;
+  font-size: 32px;
   font-weight: bold;
   color: #ff4d6d;
-  text-shadow: 0 0 20px #ff4d6d, 0 0 40px #ff4d6d;
-}
-
-/* ✨ sparkle */
-.sparkle {
-  position: fixed;
-  color: #ff4d6d;
-  font-size: 14px;
-  animation: sparkleAnim 1s linear forwards;
-}
-@keyframes sparkleAnim {
-  to {
-    transform: translateY(-30px) scale(0);
-    opacity: 0;
-  }
+  text-shadow: 0 0 15px #ff4d6d, 0 0 30px #ff4d6d;
 }
 
 /* 🎂 cake */
 #cake {
   font-size: 300px;
   margin-top: 60px;
-  position: relative;
   text-shadow: 0 0 40px #ff4d6d;
   animation: float 3s ease-in-out infinite;
 }
@@ -70,43 +55,29 @@ body {
   50% { transform: translateY(-10px); }
 }
 
-/* 🕯️ candle */
-.candle {
-  position: absolute;
-  top: -70px;
-  font-size: 32px;
-}
-
-/* 💨 smoke */
-.smoke {
-  position: absolute;
-  font-size: 20px;
-  animation: smokeUp 2s forwards;
-}
-@keyframes smokeUp {
-  to {
-    transform: translateY(-40px);
-    opacity: 0;
-  }
-}
-
-/* 💖 heart explosion */
+/* ❤️ explosion */
 .heart {
   position: fixed;
-  pointer-events: none;
-  animation: explode 1.2s ease-out forwards;
+  color: #ff4d6d;
+  font-size: 20px;
+  animation: explode 1s ease-out forwards;
 }
 @keyframes explode {
   to {
-    transform: translate(var(--x), var(--y)) scale(0);
+    transform: translateY(-100px) scale(0);
     opacity: 0;
   }
+}
+
+/* message */
+#msg {
+  margin-top: 20px;
 }
 
 /* button */
 #startBtn {
   margin-top: 25px;
-  padding: 18px 45px;
+  padding: 18px 50px;
   border-radius: 40px;
   border: none;
   background: linear-gradient(45deg, #ff4d6d, #ff758f);
@@ -114,12 +85,8 @@ body {
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 0 20px #ff4d6d;
-}
 
-/* message */
-#msg {
-  margin-top: 15px;
+  box-shadow: 0 0 20px #ff4d6d;
 }
 </style>
 </head>
@@ -130,90 +97,42 @@ body {
 
 <div id="nameGlow"></div>
 
-<div id="cake">
-  🎂
-  <div class="candle" style="left:-50px;"><span class="flame">🔥</span></div>
-  <div class="candle" style="left:0px;"><span class="flame">🔥</span></div>
-  <div class="candle" style="left:50px;"><span class="flame">🔥</span></div>
-</div>
+<div id="cake">🎂</div>
 
 <div id="msg">Tap start to blow candles 🎤</div>
 <button id="startBtn" onclick="startMic()">Start 🎤</button>
 
 <script>
 
-/* 💖 typing */
+/* 💖 NAME TYPING */
 let text = "Happy Birthday Neha ❤️";
 let i = 0;
 
-function type() {
+function typeName() {
   if (i < text.length) {
-    let el = document.getElementById("nameGlow");
-    el.innerHTML += text[i];
-
-    let rect = el.getBoundingClientRect();
-
-    for (let k = 0; k < 2; k++) {
-      let s = document.createElement("div");
-      s.className = "sparkle";
-      s.innerHTML = "✨";
-      s.style.left = rect.left + Math.random()*rect.width + "px";
-      s.style.top = rect.top + "px";
-      document.body.appendChild(s);
-      setTimeout(()=>s.remove(),1000);
-    }
-
+    document.getElementById("nameGlow").innerHTML += text[i];
     i++;
-    setTimeout(type, 250);
+    setTimeout(typeName, 200); // slower typing
   }
 }
-setTimeout(type, 600);
+typeName();
 
-
-/* 💨 + 💖 explosion */
-function blowCandles() {
-
-  document.querySelectorAll(".flame").forEach(f => {
-    let smoke = document.createElement("div");
-    smoke.className = "smoke";
-    smoke.innerHTML = "💨";
-    f.parentElement.appendChild(smoke);
-    f.innerHTML = "";
-  });
-
-  let cake = document.getElementById("cake").getBoundingClientRect();
-
-  for (let j = 0; j < 50; j++) {
+/* ❤️ HEART EXPLOSION */
+function explodeHearts() {
+  for (let i = 0; i < 20; i++) {
     let h = document.createElement("div");
     h.className = "heart";
-    h.innerHTML = "💖";
+    h.innerHTML = "❤️";
 
-    let size = 16 + Math.random()*20;
-    h.style.fontSize = size + "px";
-
-    h.style.left = cake.left + cake.width/2 + "px";
-    h.style.top = cake.top + cake.height/2 + "px";
-
-    let x = (Math.random() - 0.5) * 500 + "px";
-    let y = (Math.random() - 0.5) * 500 + "px";
-
-    h.style.setProperty("--x", x);
-    h.style.setProperty("--y", y);
+    h.style.left = (window.innerWidth/2 + (Math.random()*200-100)) + "px";
+    h.style.top = (window.innerHeight/2) + "px";
 
     document.body.appendChild(h);
-
-    setTimeout(()=>h.remove(),1200);
+    setTimeout(() => h.remove(), 1000);
   }
-
-  document.getElementById("msg").innerHTML = "Make a wish ❤️";
-
-  setTimeout(()=>{
-    window.location.href = "letter.html";
-  }, 2200);
 }
 
-
-/* 🎤 mic */
+/* 🎤 MIC */
 let blown = false;
 
 function startMic() {
@@ -222,37 +141,48 @@ function startMic() {
   btn.innerHTML = "Listening...";
   btn.disabled = true;
 
+  document.getElementById("msg").innerHTML = "Blow now 💨";
+
   navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
 
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const mic = ctx.createMediaStreamSource(stream);
-    const analyser = ctx.createAnalyser();
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const mic = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
 
     mic.connect(analyser);
     const data = new Uint8Array(analyser.frequencyBinCount);
 
     function check() {
       analyser.getByteFrequencyData(data);
-      let vol = data.reduce((a,b)=>a+b)/data.length;
+      let volume = data.reduce((a,b)=>a+b)/data.length;
 
-      if (vol > 35 && !blown) {
+      if (volume > 35 && !blown) {
         blown = true;
-        blowCandles();
+
+        document.getElementById("msg").innerHTML = "Make a wish ❤️";
+
+        explodeHearts();
+
+        setTimeout(() => {
+          window.location.href = "letter.html";
+        }, 2500);
       }
+
       requestAnimationFrame(check);
     }
 
     check();
 
-  }).catch(()=>{
+  }).catch(() => {
 
-    document.getElementById("msg").innerHTML = "Tap anywhere to blow 🕯️";
+    document.getElementById("msg").innerHTML = "Tap anywhere to blow";
 
     document.body.onclick = () => {
-      if (!blown) {
-        blown = true;
-        blowCandles();
-      }
+      explodeHearts();
+
+      setTimeout(() => {
+        window.location.href = "letter.html";
+      }, 2000);
     };
   });
 }
