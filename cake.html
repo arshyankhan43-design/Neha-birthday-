@@ -34,7 +34,7 @@ body {
 /* 💖 name */
 #nameGlow {
   position: absolute;
-  top: 32%;
+  top: 40%;
   left: 50%;
   transform: translateX(-50%);
   font-size: 32px;
@@ -137,24 +137,20 @@ let text = "Happy Birthday day Neha ji ⚘️💋";
 let index = 0;
 
 function typeName() {
+function typeName() {
   if (index < text.length) {
     let el = document.getElementById("nameGlow");
+
     el.innerHTML += text[index];
 
-    let rect = el.getBoundingClientRect();
-
-    for (let i = 0; i < 3; i++) {
-      let s = document.createElement("div");
-      s.className = "sparkle";
-      s.innerHTML = "✨";
-      s.style.left = rect.left + Math.random()*rect.width + "px";
-      s.style.top = rect.top + "px";
-      document.body.appendChild(s);
-      setTimeout(() => s.remove(), 1000);
-    }
+    // little glow pulse on each letter
+    el.style.transform = "translateX(-50%) scale(1.05)";
+    setTimeout(() => {
+      el.style.transform = "translateX(-50%) scale(1)";
+    }, 100);
 
     index++;
-    setTimeout(typeName, 120);
+    setTimeout(typeName, 280); // 💖 slow + smooth
   }
 }
 setTimeout(typeName, 600);
