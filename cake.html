@@ -26,7 +26,6 @@ body {
   background: radial-gradient(circle, rgba(255,77,109,0.15), transparent);
   animation: moveGlow 8s infinite alternate;
 }
-
 @keyframes moveGlow {
   from { transform: scale(1); }
   to { transform: scale(1.2); }
@@ -38,16 +37,11 @@ body {
   top: 32%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 34px;
+  font-size: 32px;
   font-weight: bold;
   z-index: 2;
   color: #ff4d6d;
-
-  text-shadow:
-    0 0 10px #ff4d6d,
-    0 0 20px #ff4d6d,
-    0 0 40px #ff4d6d,
-    0 0 80px rgba(255,77,109,0.8);
+  text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d, 0 0 40px #ff4d6d;
 }
 
 /* ✨ sparkle */
@@ -58,7 +52,6 @@ body {
   animation: sparkleAnim 1s linear forwards;
   pointer-events: none;
 }
-
 @keyframes sparkleAnim {
   to {
     transform: translateY(-30px) scale(0);
@@ -68,10 +61,16 @@ body {
 
 /* 🎂 cake */
 #cake {
-  font-size: 220px; /* bigger */
+  font-size: 220px;
+  margin-top: 40px;
   position: relative;
   z-index: 2;
-  margin-top: 40px; /* push slightly down */
+  text-shadow: 0 0 20px #ff4d6d, 0 0 40px rgba(255,77,109,0.6);
+  animation: cakeFloat 3s ease-in-out infinite;
+}
+@keyframes cakeFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 /* 🕯️ candle */
@@ -86,7 +85,6 @@ body {
   color: orange;
   animation: flicker 0.15s infinite alternate;
 }
-
 .flame::after {
   content: "";
   position: absolute;
@@ -96,16 +94,18 @@ body {
   border-radius: 50%;
   filter: blur(10px);
 }
-
 @keyframes flicker {
   from { transform: scale(1); }
   to { transform: scale(1.2); }
 }
 
+/* message */
 #msg {
   margin-top: 20px;
+  z-index: 2;
 }
 
+/* button */
 #startBtn {
   margin-top: 15px;
   padding: 12px 25px;
@@ -124,15 +124,23 @@ body {
 
 <div id="bgGlow"></div>
 
+<!-- 💖 name -->
 <div id="nameGlow"></div>
 
+<!-- 🎂 cake -->
+<div id="cake">
+  🎂
+  <div class="candle" style="left:-40px;"><span class="flame">🔥</span></div>
+  <div class="candle" style="left:0px;"><span class="flame">🔥</span></div>
+  <div class="candle" style="left:40px;"><span class="flame">🔥</span></div>
+</div>
 
 <div id="msg">Tap start to blow candles 🎤</div>
 <button id="startBtn" onclick="startMic()">Start 🎤</button>
 
 <script>
 
-/* 💖 NAME TYPING */
+/* 💖 NAME TYPING + SPARKLES */
 let text = "Neha ❤️";
 let index = 0;
 
@@ -141,16 +149,14 @@ function typeName() {
     let el = document.getElementById("nameGlow");
     el.innerHTML += text[index];
 
-    // ✨ sparkle effect on each letter
     let rect = el.getBoundingClientRect();
+
     for (let i = 0; i < 3; i++) {
       let s = document.createElement("div");
       s.className = "sparkle";
       s.innerHTML = "✨";
-
       s.style.left = rect.left + Math.random()*rect.width + "px";
       s.style.top = rect.top + "px";
-
       document.body.appendChild(s);
       setTimeout(() => s.remove(), 1000);
     }
@@ -159,8 +165,7 @@ function typeName() {
     setTimeout(typeName, 120);
   }
 }
-
-setTimeout(typeName, 800);
+setTimeout(typeName, 600);
 
 
 /* 🎤 MIC LOGIC */
@@ -168,7 +173,10 @@ let blown = false;
 
 function startMic() {
 
-  document.getElementById("startBtn").style.display = "none";
+  let btn = document.getElementById("startBtn");
+  btn.innerHTML = "Listening... 🎤";
+  btn.disabled = true;
+
   document.getElementById("msg").innerHTML = "Blow the candles 🕯️💨";
 
   navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
@@ -185,11 +193,12 @@ function startMic() {
 
       let volume = data.reduce((a, b) => a + b) / data.length;
 
-      if (volume > 50 && !blown) {
+      if (volume > 35 && !blown) {
         blown = true;
 
         document.querySelectorAll(".flame").forEach(f => {
           f.innerHTML = "💨";
+          f.style.animation = "none";
         });
 
         document.getElementById("msg").innerHTML = "Make a wish ❤️";
@@ -210,6 +219,7 @@ function startMic() {
 
     document.body.onclick = () => {
       document.querySelectorAll(".flame").forEach(f => f.innerHTML = "💨");
+
       setTimeout(() => {
         window.location.href = "letter.html";
       }, 2000);
