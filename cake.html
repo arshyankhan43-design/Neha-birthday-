@@ -31,6 +31,20 @@ body {
   to { transform: scale(1.2); }
 }
 
+/* 🌟 stars */
+.star {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  background: white;
+  opacity: 0.7;
+  animation: twinkle 2s infinite alternate;
+}
+@keyframes twinkle {
+  from { opacity: 0.2; }
+  to { opacity: 1; }
+}
+
 /* 💖 name */
 #nameGlow {
   position: absolute;
@@ -41,27 +55,39 @@ body {
   font-weight: bold;
   color: #ff4d6d;
   text-align: center;
-
-  text-shadow:
-    0 0 20px #ff4d6d,
-    0 0 40px #ff4d6d,
-    0 0 80px rgba(255,77,109,0.9);
+  text-shadow: 0 0 20px #ff4d6d, 0 0 40px #ff4d6d, 0 0 80px rgba(255,77,109,0.9);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.05); }
 }
 
 /* 🎂 cake */
 #cake {
   font-size: clamp(280px, 50vw, 450px);
   margin-top: 40px;
-
-  text-shadow:
-    0 0 40px #ff4d6d,
-    0 0 80px rgba(255,77,109,0.8);
-
+  position: relative;
+  text-shadow: 0 0 40px #ff4d6d, 0 0 80px rgba(255,77,109,0.8);
   animation: float 3s ease-in-out infinite;
 }
 @keyframes float {
   0%,100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
+}
+
+/* ✨ cake glow aura */
+#cake::after {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 80px;
+  background: radial-gradient(circle, rgba(255,77,109,0.5), transparent);
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  filter: blur(25px);
+  z-index: -1;
 }
 
 /* 🔥 flame */
@@ -87,7 +113,6 @@ body {
 }
 @keyframes blowOut {
   0% { transform: translateX(-50%) scale(1); opacity: 1; }
-  50% { transform: translateX(-50%) scale(1.4); opacity: 0.6; }
   100% { transform: translateX(-50%) scale(0); opacity: 0; }
 }
 
@@ -97,7 +122,22 @@ body {
   transition: 0.8s;
 }
 
-/* ❤️ hearts */
+/* 💖 floating hearts */
+.floating-heart {
+  position: fixed;
+  bottom: -20px;
+  color: #ff4d6d;
+  animation: floatUp 6s linear forwards;
+  pointer-events: none;
+}
+@keyframes floatUp {
+  to {
+    transform: translateY(-110vh);
+    opacity: 0;
+  }
+}
+
+/* ❤️ explosion */
 .heart {
   position: fixed;
   color: #ff4d6d;
@@ -117,22 +157,15 @@ body {
   bottom: 50px;
   left: 50%;
   transform: translateX(-50%);
-
   padding: 18px 70px;
   border-radius: 50px;
   border: none;
-
   background: linear-gradient(45deg, #ff4d6d, #ff758f);
   color: white;
   font-size: 20px;
   font-weight: bold;
-
   cursor: pointer;
-
-  box-shadow:
-    0 0 25px #ff4d6d,
-    0 0 50px rgba(255,77,109,0.7);
-
+  box-shadow: 0 0 25px #ff4d6d, 0 0 50px rgba(255,77,109,0.7);
   z-index: 10;
 }
 </style>
@@ -149,32 +182,62 @@ body {
   <div class="flame"></div>
 </div>
 
-<div id="msg" style="
-  position: fixed;
-  bottom: 110px;
-  width: 100%;
-  text-align: center;
-  font-size: 14px;
-  opacity: 0.8;
-">
+<div id="msg" style="position:fixed; bottom:110px; width:100%; text-align:center;">
   Tap button OR screen 💨
 </div>
+
 <button id="startBtn">Start 🎤</button>
 
 <script>
 
 let blown = false;
 
-/* 💥 MAIN ACTION */
+/* 🌟 stars */
+for (let i = 0; i < 80; i++) {
+  let s = document.createElement("div");
+  s.className = "star";
+  s.style.left = Math.random() * window.innerWidth + "px";
+  s.style.top = Math.random() * window.innerHeight + "px";
+  document.body.appendChild(s);
+}
+
+/* 💖 floating hearts */
+setInterval(() => {
+  let h = document.createElement("div");
+  h.className = "floating-heart";
+  h.innerHTML = Math.random() > 0.5 ? "💖" : "💕";
+
+  h.style.left = (window.innerWidth/2 + (Math.random()*300-150)) + "px";
+  h.style.fontSize = (16 + Math.random()*25) + "px";
+
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 6000);
+}, 300);
+
+/* 🎊 confetti */
+function confetti() {
+  for (let i = 0; i < 30; i++) {
+    let c = document.createElement("div");
+    c.innerHTML = "🎊";
+    c.style.position = "fixed";
+    c.style.left = window.innerWidth/2 + "px";
+    c.style.top = window.innerHeight/2 + "px";
+    c.style.transform = `translate(${Math.random()*400-200}px, ${Math.random()*-300}px)`;
+    c.style.transition = "1s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 1000);
+  }
+}
+
+/* 💥 main */
 function blowNow() {
   if (blown) return;
   blown = true;
 
-  let flame = document.querySelector(".flame");
-  let cake = document.getElementById("cake");
+  document.querySelector(".flame")?.classList.add("blow");
+  document.getElementById("cake")?.classList.add("zoom");
 
-  if (flame) flame.classList.add("blow");
-  if (cake) cake.classList.add("zoom");
+  confetti();
 
   setTimeout(() => {
     for (let i = 0; i < 30; i++) {
@@ -195,16 +258,12 @@ function blowNow() {
   }, 2200);
 }
 
-/* 🎤 MIC (optional) */
+/* 🎤 mic */
 function startMic() {
-
-  let btn = document.getElementById("startBtn");
-  btn.innerHTML = "Listening...";
-  btn.disabled = true;
+  document.getElementById("startBtn").innerHTML = "Listening...";
 
   navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const ctx = new AudioContext();
     const mic = ctx.createMediaStreamSource(stream);
     const analyser = ctx.createAnalyser();
 
@@ -213,32 +272,21 @@ function startMic() {
 
     function check() {
       analyser.getByteFrequencyData(data);
-
       let vol = data.reduce((a,b)=>a+b)/data.length;
 
-      if (vol > 20) {
-        blowNow();
-      }
+      if (vol > 20) blowNow();
 
       requestAnimationFrame(check);
     }
-
     check();
-
-  }).catch(() => {
-    // ignore mic error
   });
 }
 
-/* ✅ BUTTON FIX (100% WORKING) */
-window.onload = () => {
-  document.getElementById("startBtn").onclick = startMic;
-};
+/* ✅ FIX BUTTON */
+document.getElementById("startBtn").addEventListener("click", startMic);
 
-/* ✅ TAP ANYWHERE WORKS */
-document.body.addEventListener("click", () => {
-  blowNow();
-});
+/* ✅ TAP ANYWHERE */
+document.body.addEventListener("click", blowNow);
 
 </script>
 
