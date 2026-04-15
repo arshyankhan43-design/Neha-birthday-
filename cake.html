@@ -202,17 +202,25 @@ for (let i = 0; i < 80; i++) {
 }
 
 /* 💖 floating hearts */
-setInterval(() => {
+for (let i = 0; i < 40; i++) {
   let h = document.createElement("div");
-  h.className = "floating-heart";
-  h.innerHTML = Math.random() > 0.5 ? "💖" : "💕";
+  h.className = "heart";
+  h.innerHTML = "❤️";
 
-  h.style.left = (window.innerWidth/2 + (Math.random()*300-150)) + "px";
-  h.style.fontSize = (16 + Math.random()*25) + "px";
+  // random position anywhere
+  h.style.left = Math.random() * window.innerWidth + "px";
+  h.style.top = Math.random() * window.innerHeight + "px";
+
+  // random size
+  h.style.fontSize = (Math.random() * 20 + 15) + "px";
+
+  // random animation duration
+  h.style.animationDuration = (Math.random() * 1 + 0.8) + "s";
 
   document.body.appendChild(h);
-  setTimeout(() => h.remove(), 6000);
-}, 300);
+
+  setTimeout(() => h.remove(), 1200);
+}
 
 /* 🎊 confetti */
 function confetti() {
